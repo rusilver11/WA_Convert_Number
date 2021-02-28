@@ -1,4 +1,4 @@
-name: wa_number_converter
+name: WA_Convert_Number
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -28,6 +28,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+  # A simple and customizable flutter package for inputting phone number in intl / international format uses Google's libphonenumber.
+  international_phone_input: ^1.0.4
 
 dev_dependencies:
   flutter_test:

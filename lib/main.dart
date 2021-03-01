@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('WA Number Converter'),
+        title: Text("Generate WhatsApp"),
       ),
       body: _buildForm(),
     );
@@ -52,12 +54,17 @@ Widget _buildForm() {
 
 Widget _buildNumberPhoneField() {
   return TextFormField(
-    decoration: InputDecoration(labelText: 'Number Phone'),
+    decoration: InputDecoration(labelText: "Number Phone"),
     keyboardType: TextInputType.phone,
     controller: numberphone,
+    inputFormatters: [
+      PhoneInputFormatter(
+        allowEndlessPhone: true,
+        ),
+    ],
     validator: (value) {
       if (value.isEmpty) {
-        return 'Please Enter Number Phone';
+        return "Please Enter Number Phone";
       }
       return null;
     },
@@ -76,18 +83,33 @@ Widget _buildSubmitButton() {
 void _submitForm() {
   if (_formKey.currentState.validate()) {
     _launcURL();
-    AlertDialog(
-      content: Text(_launcURL() + "" + numberphone.text),
-    );
   }
 }
 
 _launcURL() async {
-  String getn = numberphone.text;
-  const url = 'https://wa.me/';
+  const url = "https://wa.me/";
   if (await canLaunch(url)) {
-    await launch(url + getn);
+    await launch(url+""+numberphone.text);
   } else {
-    throw 'Could not lauch $url';
+    throw AlertDialog(
+      content: Text("Failure Generate Number"),
+    );
   }
+}
+
+void setAlterFormatNumber(){
+  PhoneInputFormatter.addAlternativePhoneMasks(
+          countryCode: 'Indonesia',
+          alternativeMasks: [
+          '+00 00 0000-0000',
+          '+00 000 0000-0000',
+          ],
+      );
+}
+
+void _replacePhoneMask(){
+  PhoneInputFormatter.replacePhoneMask(
+    countryCode: 'IND',
+    newMask: '+00 000 0000 0000',
+);
 }

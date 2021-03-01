@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:international_phone_input/international_phone_input.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,12 +26,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-String phoneNumber;
-String phoneIsoCode;
 final _formKey = GlobalKey<FormState>();
-bool visible = false;
-String confirmedNumber = '';
-
+final numberphone = TextEditingController();
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
@@ -50,13 +46,15 @@ Widget _buildForm() {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[_buildNumberPhoneField(),_buildNumberPhoneFielde(), _buildSubmitButton()],
+        children: <Widget>[_buildNumberPhoneField(), _buildSubmitButton()],
       ));
 }
 
 Widget _buildNumberPhoneField() {
   return TextFormField(
     decoration: InputDecoration(labelText: 'Number Phone'),
+    keyboardType: TextInputType.phone,
+    controller: numberphone,
     validator: (value) {
       if (value.isEmpty) {
         return 'Please Enter Number Phone';
@@ -65,51 +63,6 @@ Widget _buildNumberPhoneField() {
     },
   );
 }
-
-  Widget _buildNumberPhoneFielde() {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Spacer(flex: 1),
-            InternationalPhoneInput(
-              onPhoneNumberChange: onPhoneNumberChange,
-              initialPhoneNumber: phoneNumber,
-              initialSelection: phoneIsoCode,
-              enabledCountries: ['+233', '+1'],
-              labelText: "Phone Number",
-            ),
-            SizedBox(height: 20),
-            InternationalPhoneInput(
-              decoration: InputDecoration.collapsed(hintText: '(123) 123-1234'),
-              onPhoneNumberChange: onPhoneNumberChange,
-              initialPhoneNumber: phoneNumber,
-              initialSelection: phoneIsoCode,
-              enabledCountries: ['+233', '+1'],
-              showCountryCodes: false,
-              showCountryFlags: true,
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              height: 1,
-              color: Colors.black,
-            ),
-            SizedBox(height: 50),
-            InternationalPhoneInputText(
-              onValidPhoneNumber: onValidPhoneNumber,
-            ),
-            Visibility(
-              child: Text(confirmedNumber),
-              visible: visible,
-            ),
-            Spacer(flex: 2)
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-
 
 Widget _buildSubmitButton() {
   return RaisedButton(
@@ -121,20 +74,20 @@ Widget _buildSubmitButton() {
 }
 
 void _submitForm() {
-  print('Submitting form');
   if (_formKey.currentState.validate()) {
-    print('Form was validated');
+    _launcURL();
+    AlertDialog(
+      content: Text(_launcURL() + "" + numberphone.text),
+    );
   }
 }
-void onPhoneNumberChange(String number, String internationalizedPhoneNumber, String isoCode) {
-    {
-       phoneNumber = number;
-       phoneIsoCode = isoCode;
-    }
-}
- void onValidPhoneNumber(String number, String internationalizedPhoneNumber, String isoCode) {
-     {
-      visible = true;
-      confirmedNumber = internationalizedPhoneNumber;
-    }
+
+_launcURL() async {
+  String getn = numberphone.text;
+  const url = 'https://wa.me/';
+  if (await canLaunch(url)) {
+    await launch(url + getn);
+  } else {
+    throw 'Could not lauch $url';
   }
+}

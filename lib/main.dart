@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WA Number Converter',
+      title: 'Generate WhatsApp Number',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -35,9 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Generate WhatsApp"),
-      ),
+      appBar: null,
       body: _buildForm(),
     );
   }
@@ -53,18 +51,20 @@ Widget _buildForm() {
 }
 
 Widget _buildNumberPhoneField() {
+  numberphone.text = "62";
   return TextFormField(
-    decoration: InputDecoration(labelText: "Number Phone"),
+    decoration: InputDecoration(
+        labelText: "Mobile Number",
+        border: OutlineInputBorder(borderSide: BorderSide()),
+        hintText: "Example 62 857 2170 0749",
+        suffixIcon: IconButton(
+            onPressed: () => numberphone.clear(), icon: Icon(Icons.clear))),
+    inputFormatters: [LengthLimitingTextInputFormatter(14)],
     keyboardType: TextInputType.phone,
     controller: numberphone,
-    inputFormatters: [
-      PhoneInputFormatter(
-        allowEndlessPhone: true,
-        ),
-    ],
     validator: (value) {
       if (value.isEmpty) {
-        return "Please Enter Number Phone";
+        return "Please Enter Mobile Number";
       }
       return null;
     },
@@ -72,10 +72,16 @@ Widget _buildNumberPhoneField() {
 }
 
 Widget _buildSubmitButton() {
+  bool _pressed = false;
   return RaisedButton(
-    child: Text("Submit"),
+    color: _pressed ? const Color(0xFF69F0AE) : const Color(0xFF00E676),
+    child: new Text("GENERATE", style: GoogleFonts.roboto(color: Colors.white)),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18.0),
+        side: BorderSide(color: Colors.white)),
     onPressed: () {
       _submitForm();
+      _pressed = !_pressed;
     },
   );
 }
@@ -89,27 +95,15 @@ void _submitForm() {
 _launcURL() async {
   const url = "https://wa.me/";
   if (await canLaunch(url)) {
-    await launch(url+""+numberphone.text);
+    if (numberphone.text.substring(0, 2) != "62") {
+      await launch(
+          url + "" + numberphone.text.replaceFirst(new RegExp(r'[0-9]'), '62'));
+    } else {
+      await launch(url + "" + numberphone.text);
+    }
   } else {
     throw AlertDialog(
       content: Text("Failure Generate Number"),
     );
   }
-}
-
-void setAlterFormatNumber(){
-  PhoneInputFormatter.addAlternativePhoneMasks(
-          countryCode: 'Indonesia',
-          alternativeMasks: [
-          '+00 00 0000-0000',
-          '+00 000 0000-0000',
-          ],
-      );
-}
-
-void _replacePhoneMask(){
-  PhoneInputFormatter.replacePhoneMask(
-    countryCode: 'IND',
-    newMask: '+00 000 0000 0000',
-);
 }

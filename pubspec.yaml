@@ -40,6 +40,8 @@ dependencies:
   flutter_focus_watcher: ^0.0.1
   #A package which simplifies the task of updating your Flutter app's launcher icon.
   flutter_launcher_icons: ^0.8.1
+  #creating Customisable Footer
+  footer: ^0.0.3
 
 dev_dependencies:
   flutter_test:

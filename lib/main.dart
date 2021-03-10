@@ -4,6 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
+import 'package:footer/footer.dart';
+import 'package:footer/footer_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,11 +40,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return FocusWatcher(
-        child: Scaffold(
-      appBar: null,
-      body: _buildForm(),
-      resizeToAvoidBottomInset: false,
-    ));
+      child: Scaffold(
+        appBar: null,
+        body: new FooterView(
+          children: <Widget>[
+            new Padding(
+              padding: new EdgeInsets.only(top: 240.0),
+              child: Center(child: _buildForm()),
+            ),
+          ],
+          footer: new Footer(child: _buildCheckUpdate()),
+        ),
+        resizeToAvoidBottomInset: false,
+      ),
+    );
   }
 
   Form _buildForm() {
@@ -52,7 +63,10 @@ class _MyHomePageState extends State<MyHomePage> {
         node: _node,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[_buildNumberPhoneField(), _buildSubmitButton()],
+          children: [
+            _buildNumberPhoneField(),
+            _buildSubmitButton(),
+          ],
         ),
       ),
     );
@@ -66,13 +80,40 @@ Widget _buildNumberPhoneField() {
       padding: const EdgeInsets.all(12.0),
       child: TextFormField(
         decoration: InputDecoration(
-            labelText: "Mobile Number",
-            border: OutlineInputBorder(borderSide: BorderSide()),
-            //hintText: "Example 62 857 2170 0749",
-            suffixIcon: IconButton(
-                onPressed: () => numberphone.clear(), icon: Icon(Icons.clear)),
-            contentPadding: const EdgeInsets.all(24.0)),
-        inputFormatters: [LengthLimitingTextInputFormatter(14)],
+          labelText: "Mobile Number",
+          labelStyle: TextStyle(
+            color: _node.hasFocus
+                ? const Color.fromRGBO(47, 58, 118, 1)
+                : const Color.fromRGBO(47, 58, 118, 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6.0),
+            borderSide: BorderSide(
+              color: const Color.fromRGBO(72, 204, 145, 1),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6.0),
+            borderSide: BorderSide(
+              color: const Color.fromRGBO(14, 214, 121, 1),
+            ),
+          ),
+          suffixIcon: IconButton(
+            onPressed: () => numberphone.clear(),
+            icon: Icon(
+              Icons.clear,
+              color: const Color.fromRGBO(72, 204, 145, 1),
+            ),
+          ),
+          contentPadding: const EdgeInsets.all(24.0),
+        ),
+        style: GoogleFonts.roboto(
+            color: const Color.fromRGBO(47, 58, 118, 1),
+            fontSize: 16,
+            fontWeight: FontWeight.w600),
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(14),
+        ],
         keyboardType: TextInputType.phone,
         controller: numberphone,
         validator: (value) {
@@ -89,22 +130,44 @@ Widget _buildNumberPhoneField() {
 Widget _buildSubmitButton() {
   bool _pressed = false;
   return SizedBox(
-    width: Get.width * 0.70,
-    height: Get.height * 0.09,
+    width: Get.width * 0.90,
+    height: Get.height * 0.12,
     child: Padding(
       padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
       child: RaisedButton(
-        color: _pressed ? const Color(0xFF69F0AE) : const Color(0xFF00E676),
+        color: _pressed
+            ? const Color.fromRGBO(229, 248, 239, 1)
+            : const Color.fromRGBO(72, 204, 145, 1),
         child: new Text("GENERATE",
-            style: GoogleFonts.roboto(color: Colors.white)),
+            style: GoogleFonts.roboto(
+                color: const Color.fromRGBO(47, 58, 118, 1),
+                fontSize: 16,
+                fontWeight: FontWeight.w900)),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18.0),
-            side: BorderSide(color: Colors.white)),
+          borderRadius: BorderRadius.circular(6.0),
+          side: BorderSide(color: Colors.white),
+        ),
         onPressed: () {
           _submitForm();
           _pressed = !_pressed;
         },
       ),
+    ),
+  );
+}
+
+Widget _buildCheckUpdate() {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 20),
+    child: InkWell(
+      child: new Text(
+        "CHECK FOR UPDATE",
+        style: GoogleFonts.roboto(
+            color: const Color.fromRGBO(47, 58, 118, 1),
+            fontSize: 16,
+            fontWeight: FontWeight.w700),
+      ),
+      onTap: () {},
     ),
   );
 }

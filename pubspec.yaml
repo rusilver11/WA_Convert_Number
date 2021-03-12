@@ -44,6 +44,10 @@ dependencies:
   footer: ^0.0.3
   #A Flutter plugin providing ota updates for Android and iOS, with download progress (Android only)
   ota_update: ^2.4.1 
+  #A plugin for creating and managing download tasks. Supports iOS and Android
+  flutter_downloader: ^1.5.2
+  #Permission plugin for Flutter. This plugin provides a cross-platform (iOS, Android) API to request and check permissions.
+  permission_handler: ^5.1.0
 
 dev_dependencies:
   flutter_test:

@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 import 'package:footer/footer.dart';
 import 'package:footer/footer_view.dart';
-import 'package:ota_update/ota_update.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,31 +37,7 @@ final numberphone = TextEditingController();
 final FocusScopeNode _node = FocusScopeNode();
 
 class _MyHomePageState extends State<MyHomePage> {
-OtaEvent currentEvent;
- void initState() {
-    super.initState();
-    _tryOtaUpdate();
-  }
-  _tryOtaUpdate() async {
-    try {
-      //LINK CONTAINS APK OF FLUTTER HELLO WORLD FROM FLUTTER SDK EXAMPLES
-      OtaUpdate()
-          .execute(
-        'https://drive.google.com/uc?export=download&id=1yckQIbBf9JHCjIsPYRHG0gDBv3i8RggC',
-        destinationFilename: 'test_download.apk',
-        //FOR NOW ANDROID ONLY - ABILITY TO VALIDATE CHECKSUM OF FILE:
-        sha256checksum: "d6da28451a1e15cf7a75f2c3f151befad3b80ad0bb232ab15c20897e54f21478",
-      )
-          .listen(
-        (OtaEvent event) {
-        setState(() => currentEvent = event);
-        },
-      );
-    } catch (e) {
-      print('Failed to make OTA update. Details: $e');
-    }
-  }
- @override
+  @override
   Widget build(BuildContext context) {
     return FocusWatcher(
       child: Scaffold(
@@ -73,7 +48,6 @@ OtaEvent currentEvent;
               padding: new EdgeInsets.only(top: 240.0),
               child: Center(child: _buildForm()),
             ),
-            Text('OTA status: ${currentEvent.status} : ${currentEvent.value} \n'),
           ],
           footer: new Footer(child: _buildCheckUpdate()),
         ),
@@ -193,8 +167,7 @@ Widget _buildCheckUpdate() {
             fontSize: 16,
             fontWeight: FontWeight.w700),
       ),
-      onTap: () {
-      },
+      onTap: () {},
     ),
   );
 }
@@ -224,5 +197,3 @@ _launcURL() async {
     );
   }
 }
-
-

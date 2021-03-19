@@ -1,5 +1,7 @@
+import 'package:WA_Convert_Number/updater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
@@ -14,7 +16,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Generate WhatsApp Number',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -49,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Center(child: _buildForm()),
             ),
           ],
-          footer: new Footer(child: _buildCheckUpdate()),
+          footer: new Footer(child: _buildCheckUpdate(context)),
         ),
         resizeToAvoidBottomInset: false,
       ),
@@ -156,19 +158,23 @@ Widget _buildSubmitButton() {
   );
 }
 
-Widget _buildCheckUpdate() {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 20),
-    child: InkWell(
-      child: new Text(
-        "CHECK FOR UPDATE",
-        style: GoogleFonts.roboto(
-            color: const Color.fromRGBO(47, 58, 118, 1),
-            fontSize: 16,
-            fontWeight: FontWeight.w700),
-      ),
-      onTap: () {},
+Widget _buildCheckUpdate(BuildContext context) {
+  return ElevatedButton(
+    child: new Text(
+      "CHECK FOR UPDATE",
+      style: GoogleFonts.roboto(
+          color: const Color.fromRGBO(47, 58, 118, 1),
+          fontSize: 16,
+          fontWeight: FontWeight.w700),
     ),
+    onPressed: () {
+      showMaterialModalBottomSheet(
+          context: context,
+          builder: (context) => StatefulBuilder(
+                  builder: (BuildContext context, StateSetter modalState) {
+                return Updater();
+              }));
+    },
   );
 }
 

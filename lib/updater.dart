@@ -21,7 +21,7 @@ class _UpdaterState extends State<Updater> {
   final String _fileUrl =
       // "https://docs.google.com/uc?export=download&id=1yckQIbBf9JHCjIsPYRHG0gDBv3i8RggC";
       "https://github.com/rusilver11/WA_Convert_Number/raw/master/update/wagenerate.apk";
-  final String _fileName = "Update_App.apk";
+  final String _fileName = "wagenerate.apk";
   final Dio _dio = Dio();
 
   String _progress = "-";

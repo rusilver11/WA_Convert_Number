@@ -169,11 +169,28 @@ Widget _buildCheckUpdate(BuildContext context) {
     ),
     onPressed: () {
       showMaterialModalBottomSheet(
-          context: context,
-          builder: (context) => StatefulBuilder(
-                  builder: (BuildContext context, StateSetter modalState) {
-                return Updater();
-              }));
+        expand: false,
+        enableDrag: false,
+        context: context,
+        builder: (context) => StatefulBuilder(
+          builder: (BuildContext context, StateSetter modalState) {
+            return Container(
+              width: Get.width * 0.50,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ConstrainedBox(
+                    constraints: new BoxConstraints(
+                        maxHeight: Get.height * 0.50,
+                        maxWidth: Get.width * 0.50),
+                    child: Updater(),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
     },
   );
 }

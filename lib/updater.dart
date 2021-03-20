@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:path/path.dart' as path;
+import 'package:get/get.dart';
 
 class Updater extends StatefulWidget {
   Updater({Key key, this.scaffoldKey}) : super(key: key);
@@ -18,7 +19,8 @@ class Updater extends StatefulWidget {
 
 class _UpdaterState extends State<Updater> {
   final String _fileUrl =
-      "https://docs.google.com/uc?export=download&id=1yckQIbBf9JHCjIsPYRHG0gDBv3i8RggC";
+      // "https://docs.google.com/uc?export=download&id=1yckQIbBf9JHCjIsPYRHG0gDBv3i8RggC";
+      "https://github.com/rusilver11/English-Quiz-Java-SQLite/raw/master/app/release/app-release.apk";
   final String _fileName = "Update_App.apk";
   final Dio _dio = Dio();
 
@@ -111,12 +113,8 @@ class _UpdaterState extends State<Updater> {
 
     try {
       final response = await _dio.download(_fileUrl, savePath,
-          onReceiveProgress: (int received, int total) {
-        setState(() {
-          _progress = (received / total * 100).toStringAsFixed(0) + "%";
-          print((received / total * 100).toStringAsFixed(0) + "%");
-        });
-      });
+          options: Options(headers: {HttpHeaders.acceptEncodingHeader: "*"}),
+          onReceiveProgress: _onReceiveProgress);
       result['isSuccess'] = response.statusCode == 200;
       result['filePath'] = savePath;
     } catch (ex) {
@@ -144,6 +142,7 @@ class _UpdaterState extends State<Updater> {
       appBar: null,
       body: Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Download progress:'),
@@ -151,13 +150,17 @@ class _UpdaterState extends State<Updater> {
               '$_progress',
               // ignore: deprecated_member_use
               style: Theme.of(context).textTheme.display1,
-            )
+            ),
+            ElevatedButton(
+              onPressed: _download,
+              child: Text("Download"),
+            ),
+            ElevatedButton(
+              onPressed: () => Get.back(),
+              child: Text("Cancel"),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _download,
-        child: Icon(Icons.file_download),
       ),
     );
   }
